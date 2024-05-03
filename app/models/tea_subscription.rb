@@ -1,0 +1,3 @@
+class TeaSubscription < ApplicationRecord
+
+end
