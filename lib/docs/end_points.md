@@ -1,6 +1,6 @@
 # Project Details
+  Tea Subscription Service that allows users to subscribe to a tea package
 
-  Tea Subscription Service that allows users to pick a tea package and choose the frequency
 ## Endpoints
 
 - An endpoint to subscribe a customer to a tea subscription
@@ -15,11 +15,9 @@ has_many :tea_subscriptions
 - Description
 - Temperature
 - Brew Time
-- Type [ White, Green, Black, Oolong ]
 
 ### Customer
-#### Relationships
-has_many :tea_subscriptions
+has_many :customer_subscriptions
 
 - First Name
 - Last Name
@@ -28,16 +26,30 @@ has_many :tea_subscriptions
 
 ### Subscription
 has_many :tea_subscriptions
+has_many :customer_subscriptions
 
 - Title
 - Price [Random Price]
+- Frequency [once, weekly, bi-weekly]
+
+### TeaSubscription
+belongs_to :subscription
+belongs_to :tea
+
+- Tea_id
+- Subscription_id
+
+### CustomerSubscription
+belongs_to :customer
+belongs_to :subscription
+
 - Status [Active, Cancelled]
-- Frequency [2 weeks, 4 weeks, 6 weeks, 8 weeks]
-- Limit [3, 5]
+- Customer_id
+- Subscription_id
 
 ## Requests
-### Endpoint 1 - POST CREATE a new TeaSubscription
-As a Customer, I want to create a new TeaSubscription, so I pick the type of Subscription that I want and I choose frequency
+### Endpoint 1 - POST CREATE a new CustomerSubscription
+As a Customer, I want to subscribe to a new package so I pick the type of Subscription that I want
 
 - "Blend Box"
   - Jasmine Green Tea
@@ -67,24 +79,22 @@ As a Customer, I want to create a new TeaSubscription, so I pick the type of Sub
   - Vanilla Rooibos
 
 
-POST "v0/api/customers/:customer_id/subscription"
+POST "v0/api/customers/:customer_id/customer_subscription"
 Params:
 
 - subscription_id
 - customer_id
-- frequency
 
 
 When either params are missing/nil, render 400
 When IDs can't be found, render 404
 Status: 204 NO CONTENT
 
-### Endpoint 2 - PATCH UPDATE a Subscription
-PATCH "v0/api/customers/:customer_id/subscription/:id"
+### Endpoint 2 - PATCH UPDATE a CustomerSubscription
+PATCH "v0/api/customers/:customer_id/customer_subscriptions/:id"
 Params:
-- subscription_id
+- customer_subscription_id
 - customer_id
-- frequency
 - status
 
 When params are missing/nil, render 400

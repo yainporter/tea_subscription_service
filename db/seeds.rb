@@ -62,13 +62,13 @@ TeaSubscription.create!(tea_id: vanilla_rooibos.id, subscription_id: sereni_tea.
 puts "TeaSubscriptions created"
 
 
-CustomerSubscription.create!(customer_id: customer1.id, subscription_id: sereni_tea.id)
-CustomerSubscription.create!(customer_id: customer1.id, subscription_id: blend_box.id)
-CustomerSubscription.create!(customer_id: customer1.id, subscription_id: leafy_luxuries.id)
+CustomerSubscription.create!(customer_id: customer1.id, subscription_id: sereni_tea.id, start_date: Faker::Date.between(from: "2023-01-01", to: "2023-05-01").strftime("%m/%d/%Y"))
+CustomerSubscription.create!(customer_id: customer1.id, subscription_id: blend_box.id, start_date: Faker::Date.between(from: "2023-01-01", to: "2023-05-01").strftime("%m/%d/%Y"))
+CustomerSubscription.create!(customer_id: customer1.id, subscription_id: leafy_luxuries.id, start_date: Faker::Date.between(from: "2023-01-01", to: "2023-05-01").strftime("%m/%d/%Y"))
 
-CustomerSubscription.create!(customer_id: customer2.id, subscription_id: taste_test_trio.id)
+CustomerSubscription.create!(customer_id: customer2.id, subscription_id: taste_test_trio.id, start_date: Faker::Date.between(from: "2023-01-01", to: "2023-05-01").strftime("%m/%d/%Y"))
 
-CustomerSubscription.create!(customer_id: customer3.id, subscription_id: leafy_luxuries.id)
-CustomerSubscription.create!(customer_id: customer3.id, subscription_id: sereni_tea.id)
+CustomerSubscription.create!(customer_id: customer3.id, subscription_id: leafy_luxuries.id, start_date: Faker::Date.between(from: "2023-01-01", to: "2023-05-01").strftime("%m/%d/%Y"))
+CustomerSubscription.create!(customer_id: customer3.id, subscription_id: sereni_tea.id, start_date: Faker::Date.between(from: "2023-01-01", to: "2023-05-01").strftime("%m/%d/%Y"))
 
 puts "CustomerSubscriptions created"
