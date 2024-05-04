@@ -1,6 +1,4 @@
 class Tea < ApplicationRecord
-  has_many :tea_subscriptions
-
   validates :title, presence: true, uniqueness: true
   validates :description, presence: true, uniqueness: true
   validates :temperature, presence: true, numericality: true

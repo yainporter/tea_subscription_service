@@ -9,16 +9,12 @@
 
 ## Data
 ### Tea
-has_many :tea_subscriptions
-
 - Title
 - Description
 - Temperature
 - Brew Time
 
 ### Customer
-has_many :customer_subscriptions
-
 - First Name
 - Last Name
 - Email
@@ -33,9 +29,6 @@ has_many :customer_subscriptions
 - Frequency [once, weekly, bi-weekly]
 
 ### TeaSubscription
-belongs_to :subscription
-belongs_to :tea
-
 - Tea_id
 - Subscription_id
 

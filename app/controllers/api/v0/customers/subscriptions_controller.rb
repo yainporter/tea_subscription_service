@@ -1,6 +1,6 @@
 class Api::V0::Customers::SubscriptionsController < ApplicationController
   def index
-    subscriptions = Subscription.customers(customer)
+    subscriptions = Subscription.customer(customer)
     render json: SubscriptionSerializer.new(subscriptions), status: :ok
   end
 
