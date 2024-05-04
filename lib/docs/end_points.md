@@ -79,7 +79,7 @@ As a Customer, I want to subscribe to a new package so I pick the type of Subscr
   - Vanilla Rooibos
 
 
-POST "v0/api/customers/:customer_id/customer_subscription"
+POST "v0/api/customer_subscription"
 Params:
 
 - subscription_id
@@ -102,7 +102,7 @@ Status: 201, created
 }
 ```
 ### Endpoint 2 - PATCH UPDATE a CustomerSubscription
-PATCH "v0/api/customers/:customer_id/customer_subscriptions/:id"
+PATCH "v0/api/customer_subscriptions/:id"
 Params:
 - customer_subscription_id
 - customer_id
@@ -114,7 +114,7 @@ Status: 204 No Content
 
 
 ### Endpoint 3 - GET INDEX all Subscriptions
-GET "v0/api/customers/:customer_id/customer_subscriptions"
+GET "v0/api/customer_subscriptions"
 Params:
 - customer_id
 
@@ -126,7 +126,7 @@ Status: 200 OK
 ```
 {
   "links": {
-    "self": "http://localhost:3000/customers/:customer_id/customer_subscriptions"
+    "self": "http://localhost:3000/customer_subscriptions"
   },
   "data": [{
     "type": "customer_subscriptions",
@@ -142,8 +142,8 @@ Status: 200 OK
           "id": "1",
           "attributes": {
             "title": "Blend Box",
-            "price": "$30",
-            "frequency": "2 weeks"
+            "price": "30",
+            "frequency": "2"
           }
         }
       }
@@ -162,8 +162,8 @@ Status: 200 OK
           "id": "4",
           "attributes": {
             "title": "SereniTEA",
-            "price": "$45",
-            "frequency": "2 weeks"
+            "price": "45",
+            "frequency": "2"
           }
         }
       }
