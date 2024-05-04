@@ -88,8 +88,19 @@ Params:
 
 When either params are missing/nil, render 400
 When IDs can't be found, render 404
-Status: 204 NO CONTENT
-
+Status: 201, created
+```
+{
+  "data": {
+    "type": "customer_subscription",
+    "id": 1,
+    "attributes": {
+      status: "Active",
+      start_date: "06/11/2022"
+    }
+  }
+}
+```
 ### Endpoint 2 - PATCH UPDATE a CustomerSubscription
 PATCH "v0/api/customers/:customer_id/customer_subscriptions/:id"
 Params:
@@ -99,25 +110,11 @@ Params:
 
 When params are missing/nil, render 400
 When IDs can't be found, render 404
-Status: 200 OK
-- Return data for updated Subscription
+Status: 204 No Content
 
-```
-{
-  type: subscriptions,
-  id: 1,
-  attributes: [
-    id: 1,
-    title: "SereniTEA",
-    price: "$10.00",
-    status: "Active",
-    frequency: "Every week"
-  ]
-}
-```
 
 ### Endpoint 3 - GET INDEX all Subscriptions
-GET "v0/api/customers/:customer_id/tea_subscriptions"
+GET "v0/api/customers/:customer_id/customer_subscriptions"
 Params:
 - customer_id
 
@@ -128,27 +125,49 @@ Status: 200 OK
 
 ```
 {
-  type: "customer",
-  id: 1,
-  attributes: {
-    subscriptions: [
-      type: "subscription",
-      id: 1,
-      attributes: {
-        title: "Tea Trove",
-        price: "$20.00",
-        status: "Active",
-        frequency: "Every month"
-      },
-      type: "subscription",
-      id: 2,
-      attributes: {
-        title: "SereniTEA",
-        price: "$10.00",
-        status: "Active",
-        frequency: "Every week"
+  "links": {
+    "self": "http://localhost:3000/customers/:customer_id/customer_subscriptions"
+  },
+  "data": [{
+    "type": "customer_subscriptions",
+    "id": "1",
+    "attributes": {
+      "status": "Active",
+      "start_date": "06/11/2023"
+    }
+    "relationships": {
+      "subscription": {
+        "data": {
+          "type": "subscription",
+          "id": "1",
+          "attributes": {
+            "title": "Blend Box",
+            "price": "$30",
+            "frequency": "2 weeks"
+          }
+        }
       }
-    ]
-  }
+    }
+  }, {
+    "type": "customer_subscriptions",
+    "id": "2",
+    "attributes": {
+      "status": "Cancelled",
+      "cancellation_date": "05/01/2024"
+    }
+    "relationships": {
+      "subscription": {
+        "data": {
+          "type": "subscription",
+          "id": "4",
+          "attributes": {
+            "title": "SereniTEA",
+            "price": "$45",
+            "frequency": "2 weeks"
+          }
+        }
+      }
+    }
+  }]
 }
 ```
