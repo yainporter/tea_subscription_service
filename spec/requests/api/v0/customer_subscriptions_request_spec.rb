@@ -56,6 +56,25 @@ RSpec.describe "Customer Subscriptions Request" do
         expect(response.status).to eq(400)
 
         data = JSON.parse(response.body, symbolize_names: true)
+        error_keys = [:status, :detail]
+        expect(data[:errors]).to be_an(Array)
+        expect(data[:errors].first).to be_a(Hash)
+        expect(data[:errors].first.keys).to eq(error_keys)
+        expect(data[:errors].first[:status]).to eq(400)
+        expect(data[:errors].first[:detail]).to eq("Invalid parameters, try again.")
+      end
+
+      it "returns 400 when an id is missing", :vcr do
+        request_body = {
+          customer_id: @customer.id
+        }
+
+        post "/api/v0/customer_subscriptions", params: JSON.generate(request_body), headers: { 'Content-Type' => 'application/json' }
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(400)
+
+        data = JSON.parse(response.body, symbolize_names: true)
 
         error_keys = [:status, :detail]
 
@@ -63,10 +82,10 @@ RSpec.describe "Customer Subscriptions Request" do
         expect(data[:errors].first).to be_a(Hash)
         expect(data[:errors].first.keys).to eq(error_keys)
         expect(data[:errors].first[:status]).to eq(400)
-        expect(data[:errors].first[:detail]).to eq("param is missing or the value is empty: customer_subscription")
+        expect(data[:errors].first[:detail]).to eq("Invalid parameters, try again.")
       end
 
-      it "returns 404 when ids are invalid", :vcr do
+      it "returns 404 when ids can't be found", :vcr do
         request_body = {
           customer_id: 1,
           subscription_id: @blend_box.id
