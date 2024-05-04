@@ -1,24 +1,78 @@
-# README
+# Tea Subscription API
+This API is built for a tea subscription service that requires 3 endpoints:
+- An endpoint to subscribe a customer to a tea subscription
+- An endpoint to cancel a customer's tea subscription
+- An endpoint to see all of a customer's subscription (active and cancelled)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Setup
 
-Things you may want to cover:
+### Prerequisites
+- Ruby (version >= 3.2.2)
+- Rails (version >= 7.1.3.2)
+- PostgreSQL
 
-* Ruby version
+### Installation
+1. Clone the repository:
 
-* System dependencies
+    ```bash
+    git clone <repository_url>
+    ```
 
-* Configuration
+2. Install dependencies:
 
-* Database creation
+    ```bash
+    bundle install
+    ```
 
-* Database initialization
+3. Set up the database:
 
-* How to run the test suite
+    ```bash
+    rails db:{drop,create,migrate,seed}
+    ```
 
-* Services (job queues, cache servers, search engines, etc.)
+## Usage
+- Start the server:
 
-* Deployment instructions
+    ```bash
+    rails server
+    ```
+## Database Set Up
+![](lib/database.png)
 
-* ...
+## RESTful Endpoints
+```
+GET /api/v0/customers/:customer_id/subscriptions
+
+{
+  "data": {
+    "type": "customer_subscription",
+    "id": 1,
+    "attributes": {
+      status: "Active",
+      start_date: "06/11/2022"
+    }
+  }
+}
+```
+- Retrieve all Subscriptions for a Customer
+- Customer ID is passed in through parameters
+```
+POST /api/v0/customer_subscriptions
+```
+- Create a new CustomerSubscription order
+- Customer ID and Subscription ID must be passed in the body
+```
+PATCH /api/v0/customer_subscriptions/:customer_subscription_id
+
+"data": [{
+  "type": "subscription",
+  "id": "1",
+  "attributes": {
+    "title": "Blend Box",
+    "price": "30",
+    "frequency": "2"
+  }
+}]
+```
+- Update a CustomerSubscription order
+- CustomerSubscription ID must be passed in the parameter

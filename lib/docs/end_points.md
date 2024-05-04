@@ -33,10 +33,7 @@ has_many :customer_subscriptions
 - Subscription_id
 
 ### CustomerSubscription
-belongs_to :customer
-belongs_to :subscription
-
-- Status [Active, Cancelled]
+- Status
 - Customer_id
 - Subscription_id
 
@@ -73,8 +70,7 @@ As a Customer, I want to subscribe to a new package so I pick the type of Subscr
 
 
 POST "v0/api/customer_subscription"
-Params:
-
+Body:
 - subscription_id
 - customer_id
 
@@ -96,9 +92,8 @@ Status: 201, created
 ```
 ### Endpoint 2 - PATCH UPDATE a CustomerSubscription
 PATCH "v0/api/customer_subscriptions/:id"
-Params:
+Body:
 - customer_subscription_id
-- customer_id
 - status
 
 When params are missing/nil, render 400
@@ -112,27 +107,16 @@ Params:
 - customer_id
 
 Status: 200 OK
-- Return data for all Subscriptions
+- Return data for all Subscriptions that belong to a customer
 
 ```
-{
-  "links": {
-    "self": "http://localhost:3000/customer_subscriptions"
-  },
-  "data": [{
-    "type":{
-      "subscription": {
-        "data": {
-          "type": "subscription",
-          "id": "1",
-          "attributes": {
-            "title": "Blend Box",
-            "price": "30",
-            "frequency": "2"
-          }
-        }
-      }
-    }
-  }]
-}
+"data": [{
+  "type": "subscription",
+  "id": "1",
+  "attributes": {
+    "title": "Blend Box",
+    "price": "30",
+    "frequency": "2"
+  }
+}]
 ```
