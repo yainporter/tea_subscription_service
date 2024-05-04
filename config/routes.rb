@@ -9,7 +9,10 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v0 do
-      resources :customer_subscriptions, only: [:index, :create, :update]
+      resources :customer_subscriptions, only: [:create, :update]
+      resources :customers, only: [] do
+        resources :subscriptions, only: [:index], module: :customers
+      end
     end
   end
   # Defines the root path route ("/")

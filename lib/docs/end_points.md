@@ -114,12 +114,10 @@ Status: 204 No Content
 
 
 ### Endpoint 3 - GET INDEX all Subscriptions
-GET "v0/api/customer_subscriptions"
+GET "v0/api/customers/:customer_id/subscriptions"
 Params:
 - customer_id
 
-When params are missing/nil, render 400
-When IDs can't be found, render 404
 Status: 200 OK
 - Return data for all Subscriptions
 
@@ -129,13 +127,7 @@ Status: 200 OK
     "self": "http://localhost:3000/customer_subscriptions"
   },
   "data": [{
-    "type": "customer_subscriptions",
-    "id": "1",
-    "attributes": {
-      "status": "Active",
-      "start_date": "06/11/2023"
-    }
-    "relationships": {
+    "type":{
       "subscription": {
         "data": {
           "type": "subscription",
@@ -143,26 +135,6 @@ Status: 200 OK
           "attributes": {
             "title": "Blend Box",
             "price": "30",
-            "frequency": "2"
-          }
-        }
-      }
-    }
-  }, {
-    "type": "customer_subscriptions",
-    "id": "2",
-    "attributes": {
-      "status": "Cancelled",
-      "cancellation_date": "05/01/2024"
-    }
-    "relationships": {
-      "subscription": {
-        "data": {
-          "type": "subscription",
-          "id": "4",
-          "attributes": {
-            "title": "SereniTEA",
-            "price": "45",
             "frequency": "2"
           }
         }

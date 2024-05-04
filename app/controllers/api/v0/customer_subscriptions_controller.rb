@@ -1,18 +1,14 @@
 class Api::V0::CustomerSubscriptionsController < ApplicationController
   before_action :check_creation_parameters, only: :create
 
-  def index
-
-  end
-
   def create
     customer_subscription = CustomerSubscription.create!(customer_id: customer.id, subscription_id: subscription.id)
-    render json: CustomerSubscriptionSerializer.new(customer_subscription, params: {active: true} ), status: :created
+    render json: CustomerSubscriptionSerializer.new(customer_subscription), status: :created
   end
 
   def update
     customer_subscription.update(cancellation_date: DateTime.now.strftime("%m/%d/%Y"), status: "Cancelled")
-    render json: CustomerSubscriptionSerializer.new(customer_subscription), status: :no_content
+    render json: CustomerSubscriptionSerializer.new(customer_subscription, params: {inactive: true}), status: :no_content
   end
 
   private
