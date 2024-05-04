@@ -26,8 +26,10 @@ RSpec.describe "Customer Subscriptions Request" do
         expect(customer_subscriptions).to eq(0)
 
         request_body = {
-          customer_id: @customer.id,
-          subscription_id: @blend_box.id
+          customer_subscription: {
+            customer_id: @customer.id,
+            subscription_id: @blend_box.id
+          }
         }
         post "/api/v0/customer_subscriptions", params: JSON.generate(request_body), headers: { 'Content-Type' => 'application/json' }
         expect(response).to be_successful
@@ -61,12 +63,14 @@ RSpec.describe "Customer Subscriptions Request" do
         expect(data[:errors].first).to be_a(Hash)
         expect(data[:errors].first.keys).to eq(error_keys)
         expect(data[:errors].first[:status]).to eq(400)
-        expect(data[:errors].first[:detail]).to eq("Invalid parameters, try again.")
+        expect(data[:errors].first[:detail]).to eq("param is missing or the value is empty: customer_subscription")
       end
 
       it "returns 400 when an id is missing", :vcr do
         request_body = {
-          customer_id: @customer.id
+          customer_subscription: {
+            customer_id: @customer.id
+          }
         }
 
         post "/api/v0/customer_subscriptions", params: JSON.generate(request_body), headers: { 'Content-Type' => 'application/json' }
@@ -87,8 +91,31 @@ RSpec.describe "Customer Subscriptions Request" do
 
       it "returns 404 when ids can't be found", :vcr do
         request_body = {
-          customer_id: 1,
-          subscription_id: @blend_box.id
+          customer_subscription: {
+            customer_id: 1,
+            subscription_id: @blend_box.id
+          }
+        }
+        post "/api/v0/customer_subscriptions", params: JSON.generate(request_body), headers: { 'Content-Type' => 'application/json' }
+
+        expect(response).to_not be_successful
+        expect(response.status).to eq(404)
+
+        data = JSON.parse(response.body, symbolize_names: true)
+
+        error_keys = [:status, :detail]
+
+        expect(data[:errors]).to be_an(Array)
+        expect(data[:errors].first).to be_a(Hash)
+        expect(data[:errors].first.keys).to eq(error_keys)
+        expect(data[:errors].first[:status]).to eq(404)
+        expect(data[:errors].first[:detail]).to eq("Couldn't find Customer with 'id'=1")
+
+        request_body = {
+          customer_subscription: {
+            customer_id: @customer.id,
+            subscription_id: 1
+          }
         }
 
         post "/api/v0/customer_subscriptions", params: JSON.generate(request_body), headers: { 'Content-Type' => 'application/json' }
@@ -104,7 +131,67 @@ RSpec.describe "Customer Subscriptions Request" do
         expect(data[:errors].first).to be_a(Hash)
         expect(data[:errors].first.keys).to eq(error_keys)
         expect(data[:errors].first[:status]).to eq(404)
-        expect(data[:errors].first[:detail]).to eq("Couldn't find Customer with 'id'=1")
+        expect(data[:errors].first[:detail]).to eq("Couldn't find Subscription with 'id'=1")
+      end
+    end
+  end
+
+  describe "PATCH 'v0/api/customer_subscriptions/:id'" do
+    describe "success" do
+      it "returns 204 No Content", :vcr do
+        CustomerSubscription.create(customer_id: @customer.id, subscription_id: @blend_box.id)
+        customer_subscription = CustomerSubscription.last
+
+        expect(customer_subscription.status).to eq("Active")
+
+        request_body = {
+          customer_subscription:{
+            customer_subscription_id: customer_subscription.id
+          }
+        }
+
+        patch "/api/v0/customer_subscriptions/#{customer_subscription.id}", params: JSON.generate(request_body), headers: { 'Content-Type' => 'application/json' }
+        expect(response).to be_successful
+        expect(response.status).to eq(204)
+        expect(response.body).to eq("")
+
+        customer_subscription = CustomerSubscription.last
+        expect(customer_subscription.status).to eq("Cancelled")
+        expect(customer_subscription.cancellation_date).to eq("05/04/2024")
+      end
+    end
+
+    describe "failure" do
+      it "returns 400 when no subscription_id is provided", :vcr do
+        CustomerSubscription.create(customer_id: @customer.id, subscription_id: @blend_box.id)
+        customer_subscription = CustomerSubscription.last
+        request_body = {
+
+        }
+
+        patch "/api/v0/customer_subscriptions/#{customer_subscription.id}", params: JSON.generate(request_body), headers: { 'Content-Type' => 'application/json' }
+        expect(response).to_not be_successful
+        expect(response.status).to eq(400)
+
+        data = JSON.parse(response.body, symbolize_names: true)
+        expect(data[:errors].first[:detail]).to eq("param is missing or the value is empty: customer_subscription")
+      end
+
+      it "returns 404 when subscription_id can't be found", :vcr do
+        CustomerSubscription.create(customer_id: @customer.id, subscription_id: @blend_box.id)
+        customer_subscription = CustomerSubscription.last
+        request_body = {
+          customer_subscription:{
+            customer_subscription_id: 1
+          }
+        }
+
+        patch "/api/v0/customer_subscriptions/#{customer_subscription.id}", params: JSON.generate(request_body), headers: { 'Content-Type' => 'application/json' }
+        expect(response).to_not be_successful
+        expect(response.status).to eq(404)
+
+        data = JSON.parse(response.body, symbolize_names: true)
+        expect(data[:errors].first[:detail]).to eq("Couldn't find CustomerSubscription with 'id'=1")
       end
     end
   end

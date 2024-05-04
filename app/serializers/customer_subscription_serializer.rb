@@ -8,7 +8,7 @@ class CustomerSubscriptionSerializer
     end
   }
 
-  attribute :end_date, if: Proc.new {|object, params|
+  attribute :cancellation_date, if: Proc.new {|object, params|
     unless params[:active]
       object.start_date
     end
