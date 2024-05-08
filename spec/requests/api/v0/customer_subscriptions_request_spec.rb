@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe "Customer Subscriptions Request" do
   before do
+    Timecop.freeze(DateTime.new(2024, 5, 4, 15, 30, 45))
+
     @customer = Customer.create!(first_name: Faker::Name.first_name, last_name: Faker::Name.last_name, email: Faker::Internet.email, address: Faker::Address.full_address)
 
     jasmine_green_tea = Tea.create!(title: "Jasmine Green Tea", description: Faker::Lorem.sentence, temperature: Faker::Number.between(from: 167, to: 212), brew_time: Faker::Number.between(from: 1, to: 4))
@@ -154,7 +156,7 @@ RSpec.describe "Customer Subscriptions Request" do
         expect(response).to be_successful
         expect(response.status).to eq(204)
         expect(response.body).to eq("")
-
+        require 'pry'; binding.pry
         customer_subscription = CustomerSubscription.last
         expect(customer_subscription.status).to eq("Cancelled")
         expect(customer_subscription.cancellation_date).to eq("05/04/2024")
